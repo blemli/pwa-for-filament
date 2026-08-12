@@ -36,7 +36,8 @@
     readBadge();
 
     // --- Install banner ---------------------------------------------------
-    if (!cfg.banner.enabled) return;
+    // pwa-screenshot=1 is set by the pwa:install screenshot capture.
+    if (!cfg.banner.enabled || new URLSearchParams(window.location.search).has('pwa-screenshot')) return;
 
     const COOKIE = 'pwa_banner_dismissed_' + cfg.panelId;
     const isDismissed = () => document.cookie.split('; ').some((cookie) => cookie.startsWith(COOKIE + '='));

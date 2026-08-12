@@ -264,7 +264,12 @@ class InstallCommand extends Command
 
         try {
             $capturer = new ScreenshotCapturer($chrome);
-            $targetUrl = rtrim($baseUrl, '/') . '/' . trim($panel->getPath(), '/');
+
+            // Target the login page directly: hitting the panel root gets
+            // redirected there anyway, and the redirect drops query params.
+            $targetPath = rescue(fn (): ?string => parse_url($panel->getLoginUrl() ?? '', PHP_URL_PATH), report: false)
+                ?: '/' . trim($panel->getPath(), '/');
+            $targetUrl = rtrim($baseUrl, '/') . $targetPath;
             $directory = InstallState::directory($panelId) . '/screenshots';
 
             $shots = [
@@ -278,7 +283,8 @@ class InstallCommand extends Command
             }
 
             foreach ($shots as $name => [$width, $height, $theme]) {
-                $url = $targetUrl . ($theme !== null ? '?pwa-theme=' . $theme : '');
+                // pwa-screenshot=1 keeps the install banner out of the shot.
+                $url = $targetUrl . '?pwa-screenshot=1' . ($theme !== null ? '&pwa-theme=' . $theme : '');
 
                 $capturer->capture($url, "{$directory}/{$name}.png", $width, $height)
                     ? $this->line("  - screenshots/{$name}.png ({$width}x{$height})")
