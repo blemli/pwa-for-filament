@@ -15,6 +15,7 @@ use Filament\Panel;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Process;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Throwable;
 
@@ -35,7 +36,8 @@ class InstallCommand extends Command
         {--force : Skip prompts, reusing previous choices}
         {--panel= : The panel ID to install for}
         {--skip-screenshots : Do not capture manifest screenshots}
-        {--url= : Base URL to capture screenshots from}';
+        {--url= : Base URL to capture screenshots from}
+        {--screenshot-user= : Email of the user to capture dashboard screenshots as}';
 
     public $description = 'Turn a Filament panel into an installable PWA: icons, manifest choices, screenshots';
 
@@ -264,12 +266,12 @@ class InstallCommand extends Command
 
         try {
             $capturer = new ScreenshotCapturer($chrome);
+            $userId = $this->screenshotUserId($panel);
 
-            // Target the login page directly: hitting the panel root gets
-            // redirected there anyway, and the redirect drops query params.
-            $targetPath = rescue(fn (): ?string => parse_url($panel->getLoginUrl() ?? '', PHP_URL_PATH), report: false)
+            // Fallback without an authenticated user: the login page directly,
+            // since hitting the panel root redirects there and drops params.
+            $loginPath = rescue(fn (): ?string => parse_url($panel->getLoginUrl() ?? '', PHP_URL_PATH), report: false)
                 ?: '/' . trim($panel->getPath(), '/');
-            $targetUrl = rtrim($baseUrl, '/') . $targetPath;
             $directory = InstallState::directory($panelId) . '/screenshots';
 
             $shots = [
@@ -283,10 +285,20 @@ class InstallCommand extends Command
             }
 
             foreach ($shots as $name => [$width, $height, $theme]) {
-                // pwa-screenshot=1 keeps the install banner out of the shot.
-                $url = $targetUrl . '?pwa-screenshot=1' . ($theme !== null ? '&pwa-theme=' . $theme : '');
+                if ($userId !== null) {
+                    // Signed debug-only login route -> authenticated dashboard.
+                    $path = URL::temporarySignedRoute(
+                        "filament.{$panelId}.pwa.screenshot-login",
+                        now()->addMinutes(10),
+                        array_filter(['user' => $userId, 'pwa-theme' => $theme]),
+                        absolute: false,
+                    );
+                } else {
+                    // pwa-screenshot=1 keeps the install banner out of the shot.
+                    $path = $loginPath . '?pwa-screenshot=1' . ($theme !== null ? '&pwa-theme=' . $theme : '');
+                }
 
-                $capturer->capture($url, "{$directory}/{$name}.png", $width, $height)
+                $capturer->capture(rtrim($baseUrl, '/') . $path, "{$directory}/{$name}.png", $width, $height)
                     ? $this->line("  - screenshots/{$name}.png ({$width}x{$height})")
                     : $this->warn("  - screenshots/{$name}.png failed");
             }
@@ -297,6 +309,49 @@ class InstallCommand extends Command
         } finally {
             $serveProcess?->stop();
         }
+    }
+
+    /**
+     * The user to capture authenticated dashboard screenshots as. Requires
+     * debug mode (the signed screenshot-login route is inert otherwise);
+     * falls back to the first user, or to login-page captures when none.
+     */
+    protected function screenshotUserId(Panel $panel): int | string | null
+    {
+        if (! app()->hasDebugModeEnabled()) {
+            $this->warn('APP_DEBUG is off - capturing the login page instead of the dashboard.');
+
+            return null;
+        }
+
+        $userId = rescue(function () use ($panel): int | string | null {
+            $guard = auth()->guard($panel->getAuthGuard());
+            $model = method_exists($guard, 'getProvider') ? $guard->getProvider()->getModel() : null;
+
+            if ($model === null) {
+                return null;
+            }
+
+            $query = $model::query();
+
+            if ($email = $this->option('screenshot-user')) {
+                $query->where('email', $email);
+            }
+
+            $user = $query->first();
+
+            if ($user !== null) {
+                $this->line("Capturing dashboard screenshots as {$user->email} (override with --screenshot-user=).");
+            }
+
+            return $user?->getKey();
+        }, report: false);
+
+        if ($userId === null) {
+            $this->warn('No user found for dashboard screenshots - capturing the login page instead.');
+        }
+
+        return $userId;
     }
 
     /** @return array{0: ?string, 1: ?object} */

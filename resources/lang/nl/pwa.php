@@ -19,6 +19,8 @@ return [
     'manifest' => [
         'screenshot_desktop' => 'Desktopweergave',
         'screenshot_mobile' => 'Mobiele weergave',
+        'screenshot_desktop_dark' => 'Desktopweergave (donker)',
+        'screenshot_mobile_dark' => 'Mobiele weergave (donker)',
     ],
 
 ];

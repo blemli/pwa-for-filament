@@ -19,6 +19,8 @@ return [
     'manifest' => [
         'screenshot_desktop' => '桌面视图',
         'screenshot_mobile' => '移动视图',
+        'screenshot_desktop_dark' => '桌面视图（深色）',
+        'screenshot_mobile_dark' => '移动视图（深色）',
     ],
 
 ];

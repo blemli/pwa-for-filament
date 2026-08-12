@@ -19,6 +19,8 @@ return [
     'manifest' => [
         'screenshot_desktop' => 'Vista de escritorio',
         'screenshot_mobile' => 'Vista móvil',
+        'screenshot_desktop_dark' => 'Vista de escritorio (oscuro)',
+        'screenshot_mobile_dark' => 'Vista móvil (oscuro)',
     ],
 
 ];

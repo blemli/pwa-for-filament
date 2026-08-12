@@ -45,9 +45,12 @@
         window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
     // Session cookie (no expiry): dismissal is shared across tabs and
-    // forgotten when the browser closes.
+    // forgotten when the browser closes. The path must not end in a slash:
+    // "/admin/" would not cover "/admin" itself (RFC 6265 path matching).
+    const cookiePath = cfg.scope.length > 1 ? cfg.scope.replace(/\/+$/, '') : '/';
+
     const rememberDismissal = () => {
-        document.cookie = COOKIE + '=1; path=' + (cfg.scope || '/') + '; SameSite=Lax';
+        document.cookie = COOKIE + '=1; path=' + cookiePath + '; SameSite=Lax';
     };
 
     let deferredPrompt = null;

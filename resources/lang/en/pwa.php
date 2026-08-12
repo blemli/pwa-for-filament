@@ -19,6 +19,8 @@ return [
     'manifest' => [
         'screenshot_desktop' => 'Desktop view',
         'screenshot_mobile' => 'Mobile view',
+        'screenshot_desktop_dark' => 'Desktop view (dark)',
+        'screenshot_mobile_dark' => 'Mobile view (dark)',
     ],
 
 ];

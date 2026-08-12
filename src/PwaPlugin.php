@@ -4,6 +4,7 @@ namespace Blemli\Pwa;
 
 use Blemli\Pwa\Http\Controllers\ManifestController;
 use Blemli\Pwa\Http\Controllers\OfflineController;
+use Blemli\Pwa\Http\Controllers\ScreenshotLoginController;
 use Blemli\Pwa\Http\Controllers\ServiceWorkerController;
 use Blemli\Pwa\Http\Controllers\ShareTargetController;
 use Blemli\Pwa\Support\ColorConverter;
@@ -80,6 +81,9 @@ class PwaPlugin implements Plugin
                 ->middleware('throttle:20,1')
                 ->name('pwa.share');
             Route::get('pwa/share/resume', [ShareTargetController::class, 'resume'])->name('pwa.share.resume');
+            Route::get('pwa/screenshot-login', ScreenshotLoginController::class)
+                ->middleware('signed:relative')
+                ->name('pwa.screenshot-login');
         });
 
         $panel->renderHook(PanelsRenderHook::HEAD_START, fn (): View => view('pwa-for-filament::theme-forcer'));

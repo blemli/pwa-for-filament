@@ -19,6 +19,8 @@ return [
     'manifest' => [
         'screenshot_desktop' => 'Vue bureau',
         'screenshot_mobile' => 'Vue mobile',
+        'screenshot_desktop_dark' => 'Vue bureau (sombre)',
+        'screenshot_mobile_dark' => 'Vue mobile (sombre)',
     ],
 
 ];

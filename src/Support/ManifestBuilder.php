@@ -141,14 +141,16 @@ class ManifestBuilder
             $name = basename($file);
             $wide = str_starts_with($name, 'wide-') || (! str_starts_with($name, 'narrow-') && $width >= $height);
 
+            // The manifest spec has no color-scheme member for screenshots,
+            // so dark captures are just extra entries with a telling label.
+            $key = ($wide ? 'screenshot_desktop' : 'screenshot_mobile') . (str_contains($name, '-dark') ? '_dark' : '');
+
             $screenshots[] = [
                 'src' => asset("pwa/{$panelId}/screenshots/{$name}"),
                 'sizes' => "{$width}x{$height}",
                 'type' => 'image/png',
                 'form_factor' => $wide ? 'wide' : 'narrow',
-                'label' => $wide
-                    ? __('pwa-for-filament::pwa.manifest.screenshot_desktop')
-                    : __('pwa-for-filament::pwa.manifest.screenshot_mobile'),
+                'label' => __("pwa-for-filament::pwa.manifest.{$key}"),
             ];
         }
 
