@@ -359,17 +359,8 @@ class PwaPlugin implements Plugin
 
     protected function exemptShareRouteFromCsrf(Panel $panel): void
     {
-        $uri = trim(trim($panel->getPath(), '/') . '/pwa/share', '/');
-
-        foreach ([
-            ValidateCsrfToken::class,
-            'Illuminate\Foundation\Http\Middleware\PreventRequestForgery',
-        ] as $middleware) {
-            if (class_exists($middleware) && method_exists($middleware, 'except')) {
-                $middleware::except($uri);
-
-                return;
-            }
-        }
+        // The OS share sheet posts without a CSRF token. except() exists on
+        // every supported Laravel; newer renames keep a class alias.
+        ValidateCsrfToken::except(trim(trim($panel->getPath(), '/') . '/pwa/share', '/'));
     }
 }

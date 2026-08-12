@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Livewire\Features\SupportFileUploads\FileUploadConfiguration;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 /**
  * Receives Web Share Target POSTs from the OS share sheet. The shared files
@@ -35,7 +36,15 @@ class ShareTargetController
         $stored = [];
 
         foreach (Arr::wrap($request->file('file')) as $file) {
-            $stored[] = basename(FileUploadConfiguration::storeTemporaryFile($file, FileUploadConfiguration::disk()));
+            // Embedded-name storage works on both Livewire 3 and 4;
+            // FileUploadConfiguration::storeTemporaryFile() is 4-only.
+            $filename = TemporaryUploadedFile::generateHashNameWithOriginalNameEmbedded($file);
+
+            $file->storeAs('/' . FileUploadConfiguration::path(), $filename, [
+                'disk' => FileUploadConfiguration::disk(),
+            ]);
+
+            $stored[] = $filename;
         }
 
         session()->put(self::SESSION_KEY, [
