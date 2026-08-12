@@ -4,7 +4,7 @@ return [
 
     'banner' => [
         'title' => '安装 :app',
-        'description' => '将此应用安装到您的设备，快速访问并支持离线使用。',
+        'description' => '将此应用安装到您的设备，快速访问。',
         'install' => '安装',
         'dismiss' => '暂不',
         'firefox_instructions' => 'Firefox 不支持直接安装。请打开浏览器菜单并选择“添加到主屏幕”（Android），或使用基于 Chromium 的浏览器安装。',

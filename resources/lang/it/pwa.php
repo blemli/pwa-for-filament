@@ -4,7 +4,7 @@ return [
 
     'banner' => [
         'title' => 'Installa :app',
-        'description' => 'Installa questa app sul tuo dispositivo per un accesso rapido e l\'uso offline.',
+        'description' => 'Installa questa app sul tuo dispositivo per un accesso rapido.',
         'install' => 'Installa',
         'dismiss' => 'Non ora',
         'firefox_instructions' => 'Firefox non supporta l\'installazione diretta. Apri il menu del browser e scegli «Aggiungi alla schermata Home» (Android), oppure usa un browser basato su Chromium.',

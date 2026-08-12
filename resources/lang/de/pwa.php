@@ -4,7 +4,7 @@ return [
 
     'banner' => [
         'title' => ':app installieren',
-        'description' => 'Diese App auf dem Gerät installieren – für schnellen Zugriff und Offline-Nutzung.',
+        'description' => 'Diese App auf dem Gerät installieren – für schnellen Zugriff.',
         'install' => 'Installieren',
         'dismiss' => 'Später',
         'firefox_instructions' => 'Firefox unterstützt keine direkte Installation. Im Browser-Menü „Zum Startbildschirm hinzufügen" wählen (Android) oder einen Chromium-basierten Browser verwenden.',

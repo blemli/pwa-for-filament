@@ -4,7 +4,7 @@ return [
 
     'banner' => [
         'title' => 'Instalar :app',
-        'description' => 'Instala esta aplicación en tu dispositivo para un acceso rápido y uso sin conexión.',
+        'description' => 'Instala esta aplicación en tu dispositivo para un acceso rápido.',
         'install' => 'Instalar',
         'dismiss' => 'Ahora no',
         'firefox_instructions' => 'Firefox no permite la instalación directa. Abre el menú del navegador y elige «Añadir a pantalla de inicio» (Android), o usa un navegador basado en Chromium.',
