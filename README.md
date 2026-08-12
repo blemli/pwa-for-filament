@@ -8,7 +8,7 @@
 
 Turns your Filament panel (v4/v5) into an installable PWA: manifest and colors from your panel config, icons from your brand logo (SVG welcome), install banner (Chromium + Firefox), offline page, app-icon badge from database notifications, Web Share Target into a FileUpload of your choice, and light/dark screenshots captured for you.
 
-![Install banner](https://raw.githubusercontent.com/blemli/pwa-for-filament/main/docs/install-banner.png)
+![Install banner](https://raw.githubusercontent.com/blemli/pwa-for-filament/main/art/install-banner.png)
 
 ## Install
 
