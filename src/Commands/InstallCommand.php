@@ -307,6 +307,10 @@ class InstallCommand extends Command
             if ($panel->hasDarkMode() && ! app()->hasDebugModeEnabled()) {
                 $this->warn('Dark-mode screenshots need APP_DEBUG=true (the theme forcer only runs in debug mode).');
             }
+
+            if ($userId !== null) {
+                $this->warn('Dashboard screenshots can show real data and are served publicly from public/pwa/ — review them before deploying.');
+            }
         } finally {
             $serveProcess?->stop();
         }

@@ -2,6 +2,13 @@
 
 All notable changes to `pwa-for-filament` will be documented in this file.
 
+## v0.1.1 - 2026-08-12
+
+- SVG logos are now rasterized via librsvg or Inkscape (called through captured processes) before falling back to Imagick — no more delegate deprecation warnings leaking into `pwa:install` output, and SVG sources now work on GD-only systems that have either tool
+- Screenshot login route additionally requires a non-production environment (on top of debug mode and a signed URL)
+- `pwa:install` warns that captured dashboard screenshots are publicly served and should be reviewed before deploying
+- README banner shot retaken in English (mouseless demo app)
+
 ## v0.1.0 - 2026-08-12
 
 Initial release.

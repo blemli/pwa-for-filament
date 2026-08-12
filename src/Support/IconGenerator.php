@@ -4,12 +4,17 @@ namespace Blemli\Pwa\Support;
 
 use GdImage;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Process;
 use Imagick;
 use ImagickPixel;
+use Symfony\Component\Process\ExecutableFinder;
+use Throwable;
 
 /**
  * Renders the PWA icon set from a single source image using whatever the
- * host already has: Imagick (required for SVG sources), GD otherwise.
+ * host already has: SVG sources are rasterized via librsvg, Inkscape or
+ * Imagick (in that order, through captured processes so delegate warnings
+ * never leak into console output), then resized with Imagick or GD.
  * No composer dependencies.
  */
 class IconGenerator
@@ -42,14 +47,19 @@ class IconGenerator
         if ($this->svg) {
             File::copy($this->source, $target = "{$this->outputDirectory}/icon.svg");
             $this->generated[] = $target;
-        }
 
-        if ($this->svg && ! extension_loaded('imagick')) {
-            $this->warnings[] = 'The brand logo is an SVG but ext-imagick is missing, so the PNG icon sizes '
-                . '(192px and 512px are required for installability) were skipped. Install ext-imagick and re-run, '
-                . 'or point icons.source to a PNG.';
+            $master = $this->rasterizeSvg();
 
-            return $this;
+            if ($master === null) {
+                $this->warnings[] = 'The brand logo is an SVG but no rasterizer is available, so the PNG icon '
+                    . 'sizes (192px and 512px are required for installability) were skipped. Install librsvg '
+                    . '(rsvg-convert), Inkscape or ext-imagick and re-run, or point icons.source to a PNG.';
+
+                return $this;
+            }
+
+            $this->source = $master;
+            $this->svg = false;
         }
 
         if (! extension_loaded('imagick') && ! extension_loaded('gd')) {
@@ -61,6 +71,48 @@ class IconGenerator
         extension_loaded('imagick') ? $this->generateWithImagick() : $this->generateWithGd();
 
         return $this;
+    }
+
+    /**
+     * SVG -> PNG master, preferring dedicated rasterizers called through
+     * captured processes: Imagick's own SVG handling shells out to a
+     * delegate whose deprecation warnings leak straight to the console.
+     */
+    protected function rasterizeSvg(): ?string
+    {
+        $target = tempnam(sys_get_temp_dir(), 'pwa-icon-') . '.png';
+        $finder = new ExecutableFinder;
+        $size = (string) self::MASTER_SIZE;
+
+        if ($binary = $finder->find('rsvg-convert')) {
+            $result = Process::timeout(60)->run([$binary, '--keep-aspect-ratio', '-w', $size, '-h', $size, '-o', $target, $this->source]);
+
+            if ($result->successful() && is_file($target) && filesize($target) > 0) {
+                return $target;
+            }
+        }
+
+        if ($binary = $finder->find('inkscape')) {
+            $result = Process::timeout(60)->run([$binary, '--export-type=png', "--export-filename={$target}", '-w', $size, $this->source]);
+
+            if ($result->successful() && is_file($target) && filesize($target) > 0) {
+                return $target;
+            }
+        }
+
+        if (extension_loaded('imagick')) {
+            try {
+                $master = $this->imagickMaster();
+                $master->writeImage($target);
+                $master->destroy();
+
+                return $target;
+            } catch (Throwable) {
+                // No delegate able to read SVG — fall through to the warning.
+            }
+        }
+
+        return null;
     }
 
     protected function generateWithImagick(): void

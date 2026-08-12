@@ -15,7 +15,7 @@ class ScreenshotLoginController
 {
     public function __invoke(Request $request): RedirectResponse
     {
-        abort_unless(app()->hasDebugModeEnabled(), 404);
+        abort_unless(app()->hasDebugModeEnabled() && ! app()->isProduction(), 404);
 
         $panel = Filament::getCurrentPanel();
 
