@@ -15,6 +15,7 @@ use Filament\Panel;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Process;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Throwable;
@@ -332,16 +333,25 @@ class InstallCommand extends Command
                 return null;
             }
 
+            $instance = new $model;
             $query = $model::query();
 
-            if ($email = $this->option('screenshot-user')) {
-                $query->where('email', $email);
+            if ($identifier = $this->option('screenshot-user')) {
+                // Match the primary key or, where the app has one, the email.
+                $query->where(function ($query) use ($identifier, $instance): void {
+                    $query->where($instance->getKeyName(), $identifier);
+
+                    if (Schema::hasColumn($instance->getTable(), 'email')) {
+                        $query->orWhere('email', $identifier);
+                    }
+                });
             }
 
             $user = $query->first();
 
             if ($user !== null) {
-                $this->line("Capturing dashboard screenshots as {$user->email} (override with --screenshot-user=).");
+                $label = $user->email ?? $user->name ?? $user->getKey();
+                $this->line("Capturing dashboard screenshots as {$label} (override with --screenshot-user=).");
             }
 
             return $user?->getKey();
