@@ -1,15 +1,15 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace Blemli\Pwa;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 
-class SkeletonPlugin implements Plugin
+class PwaPlugin implements Plugin
 {
     public function getId(): string
     {
-        return 'skeleton';
+        return 'pwa-for-filament';
     }
 
     public function register(Panel $panel): void
