@@ -1,87 +1,39 @@
-# Zero config. Fully installable.
+# pwa-for-filament
+
+> Zero config. Fully installable.
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/blemli/pwa-for-filament.svg?style=flat-square)](https://packagist.org/packages/blemli/pwa-for-filament)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/blemli/pwa-for-filament/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/blemli/pwa-for-filament/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/blemli/pwa-for-filament/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/blemli/pwa-for-filament/actions?query=workflow%3A"Fix+PHP+code+styling"+branch%3Amain)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/blemli/pwa-for-filament/tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/blemli/pwa-for-filament/actions?query=workflow%3Atests+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/blemli/pwa-for-filament.svg?style=flat-square)](https://packagist.org/packages/blemli/pwa-for-filament)
 
+Turns your Filament panel (v4/v5) into an installable PWA: manifest and colors from your panel config, icons from your brand logo (SVG welcome), install banner (Chromium + Firefox), offline page, app-icon badge from database notifications, Web Share Target into a FileUpload of your choice, and light/dark screenshots captured for you.
 
+![Install banner](docs/install-banner.png)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
-
-## Installation
-
-You can install the package via composer:
+## Install
 
 ```bash
 composer require blemli/pwa-for-filament
+php artisan pwa:install
 ```
 
-> [!IMPORTANT]
-> If you have not set up a custom theme and are using Filament Panels follow the instructions in the [Filament Docs](https://filamentphp.com/docs/4.x/styling/overview#creating-a-custom-theme) first.
-
-After setting up a custom theme add the plugin's views to your theme css file or your app's css file if using the standalone packages.
-
-```css
-@source '../../../../vendor/blemli/pwa-for-filament/resources/**/*.blade.php';
-```
-
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="pwa-for-filament-migrations"
-php artisan migrate
-```
-
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="pwa-for-filament-config"
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="pwa-for-filament-views"
-```
-
-This is the contents of the published config file:
+Register the plugin in your panel provider:
 
 ```php
-return [
-];
+->plugin(\Blemli\Pwa\PwaPlugin::make())
 ```
 
-## Usage
+That's it — everything is derived from the panel. Optional tweaks via `config/pwa-for-filament.php` or fluently:
 
 ```php
-$pwa = new Blemli\Pwa();
-echo $pwa->echoPhrase('Hello, Blemli!');
+PwaPlugin::make()
+    ->offlineMessage('Back soon.')
+    ->shareTarget(DocumentResource::class, 'attachment')
+    ->badge(false)
 ```
 
-## Testing
-
-```bash
-composer test
-```
-
-## Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
-## Contributing
-
-Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
-
-## Security Vulnerabilities
-
-Please review [our security policy](.github/SECURITY.md) on how to report security vulnerabilities.
-
-## Credits
-
-- [grafst](https://github.com/blemli)
-- [All Contributors](../../contributors)
+Uninstall cleanly with `php artisan pwa:uninstall`.
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+MIT © [blemli](https://github.com/blemli)
