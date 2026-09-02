@@ -2,6 +2,11 @@
 
 All notable changes to `pwa-for-filament` will be documented in this file.
 
+## v0.1.2 - 2026-09-02
+
+- The offline page now derives its entire look from the panel theme instead of shipping hardcoded zinc styles: background, surface, text and ring colors come from the panel's registered `gray` palette, the retry button uses `primary` 600/500 (matching Filament's solid buttons), and the body uses the panel's font family
+- The offline page respects the panel's dark-mode configuration: disabled panels stay light, `darkMode(forced)` panels stay dark, and otherwise the user's in-app theme choice (`localStorage.theme`, same as Filament's bootstrap) decides, falling back to the OS preference
+
 ## v0.1.1 - 2026-08-12
 
 - SVG logos are now rasterized via librsvg or Inkscape (called through captured processes) before falling back to Imagick — no more delegate deprecation warnings leaking into `pwa:install` output, and SVG sources now work on GD-only systems that have either tool
