@@ -7,6 +7,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Support\Colors\Color;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
@@ -28,6 +29,8 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => '#20605a',
                 // Exercises integer shade aliases and the literal 0.
                 'aliased' => ['50' => 'oklch(0.985 0 0)', '500' => 'oklch(0.5 0.1 200)', '600' => 500, '900' => 0],
+                // Exercises the dark-text-on-pale-background button path.
+                'pale' => Color::Yellow,
             ])
             ->darkMode()
             ->databaseNotifications()

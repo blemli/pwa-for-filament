@@ -25,6 +25,24 @@ it('resolves integer shade aliases and the literal zero', function () {
         ->and(ColorConverter::resolveShade($palette, 123))->toBeNull();
 });
 
+it('resolves button colors through Filament\'s own solid-button resolver', function () {
+    bootPanel();
+
+    $colors = ColorConverter::buttonColors('primary');
+
+    expect($colors)->toBeArray()
+        ->toHaveKeys(['bg', 'text', 'hoverBg', 'hoverText', 'darkBg', 'darkText', 'darkHoverBg', 'darkHoverText'])
+        ->each->toMatch('/^#[0-9a-f]{6}$/');
+
+    expect(ColorConverter::buttonColors('missing-name'))->toBeNull();
+});
+
+it('gives pale palettes dark button text like Filament does', function () {
+    bootPanel();
+
+    expect(ColorConverter::buttonColors('pale')['text'])->not->toBe('#ffffff');
+});
+
 it('resolves booted panel colors to hex', function () {
     bootPanel();
 
