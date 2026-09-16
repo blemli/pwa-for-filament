@@ -55,7 +55,7 @@ it('ships the client config in the head', function () {
 });
 
 it('never shows a banner on firefox — there is nothing to install there', function () {
-    $js = file_get_contents(__DIR__.'/../resources/dist/pwa.js');
+    $js = file_get_contents(__DIR__ . '/../resources/dist/pwa.js');
 
     expect($js)->not->toContain("show('firefox'")
         ->and($js)->not->toContain('isFirefox');
