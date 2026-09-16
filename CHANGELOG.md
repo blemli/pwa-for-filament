@@ -2,6 +2,10 @@
 
 All notable changes to `pwa-for-filament` will be documented in this file.
 
+## Unreleased
+
+- The install banner no longer shows on Firefox: desktop Firefox cannot install PWAs, so the "switch browser" instructions nagged every session. Browsers without `beforeinstallprompt` now get no banner at all (`firefox_instructions` translations removed)
+
 ## v0.1.2 - 2026-09-02
 
 - The offline page now derives its entire look from the panel theme instead of shipping hardcoded zinc styles: background, surface, text and ring colors come from the panel's registered `gray` palette, the retry button uses `primary` 600/500 (matching Filament's solid buttons), and the body uses the panel's font family

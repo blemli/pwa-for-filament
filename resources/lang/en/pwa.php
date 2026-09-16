@@ -7,7 +7,6 @@ return [
         'description' => 'Install this app on your device for quick access.',
         'install' => 'Install',
         'dismiss' => 'Not now',
-        'firefox_instructions' => 'Firefox does not support direct installation. Open the browser menu and choose "Add to Home Screen" (Android), or use a Chromium-based browser to install.',
     ],
 
     'offline' => [

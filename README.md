@@ -6,7 +6,7 @@
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/blemli/pwa-for-filament/tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/blemli/pwa-for-filament/actions?query=workflow%3Atests+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/blemli/pwa-for-filament.svg?style=flat-square)](https://packagist.org/packages/blemli/pwa-for-filament)
 
-Turns your Filament panel (v4/v5) into an installable PWA: manifest and colors from your panel config, icons from your brand logo (SVG welcome), install banner (Chromium + Firefox), offline page, app-icon badge from database notifications, Web Share Target into a FileUpload of your choice, and light/dark screenshots captured for you.
+Turns your Filament panel (v4/v5) into an installable PWA: manifest and colors from your panel config, icons from your brand logo (SVG welcome), install banner (Chromium; browsers without an install prompt get none), offline page, app-icon badge from database notifications, Web Share Target into a FileUpload of your choice, and light/dark screenshots captured for you.
 
 ![Install banner](https://raw.githubusercontent.com/blemli/pwa-for-filament/main/art/install-banner.png)
 

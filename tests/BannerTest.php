@@ -3,7 +3,7 @@
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
 
-it('renders the install banner with both variants into the panel body', function () {
+it('renders the install banner with only the native variant into the panel body', function () {
     bootPanel();
 
     $html = (string) FilamentView::renderHook(PanelsRenderHook::BODY_START);
@@ -11,7 +11,8 @@ it('renders the install banner with both variants into the panel body', function
     expect($html)
         ->toContain('id="pwa-install-banner"')
         ->toContain('data-pwa-variant="native"')
-        ->toContain('data-pwa-variant="firefox"')
+        ->not->toContain('data-pwa-variant="firefox"')
+        ->not->toContain('firefox_instructions')
         ->toContain('Install Test App')
         ->toContain('data-pwa-install')
         ->toContain('data-pwa-dismiss')
@@ -51,4 +52,11 @@ it('ships the client config in the head', function () {
         ->toContain('"swUrl":"/admin/sw.js"')
         ->toContain('"scope":"/admin/"')
         ->toContain('name="theme-color"');
+});
+
+it('never shows a banner on firefox — there is nothing to install there', function () {
+    $js = file_get_contents(__DIR__.'/../resources/dist/pwa.js');
+
+    expect($js)->not->toContain("show('firefox'")
+        ->and($js)->not->toContain('isFirefox');
 });

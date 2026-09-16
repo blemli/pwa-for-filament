@@ -1,6 +1,6 @@
 /* pwa-for-filament client runtime: service worker registration, install
- * banner (native prompt on Chromium, instructions on Firefox), and app icon
- * badging. Plain JS, no build step. */
+ * banner (native prompt on Chromium), and app icon badging. Plain JS, no
+ * build step. */
 (() => {
     const configEl = document.getElementById('pwa-config');
 
@@ -109,9 +109,9 @@
         show('native', cfg.banner.delay);
     });
 
-    const isFirefox = navigator.userAgent.includes('Firefox') && !('onbeforeinstallprompt' in window);
-
-    if (isFirefox) show('firefox', cfg.banner.delay);
+    // Browsers without beforeinstallprompt (Firefox on every platform, Safari)
+    // get no banner at all: there is nothing to install, and telling people to
+    // switch browsers is not this package's job.
 
     // Restore visibility after SPA navigations (the swapped-in banner starts hidden).
     document.addEventListener('livewire:navigated', () => {

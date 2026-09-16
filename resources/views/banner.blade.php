@@ -43,17 +43,6 @@
                         </div>
                     </div>
 
-                    <div data-pwa-variant="firefox" hidden>
-                        <p class="fi-section-header-description">
-                            {{ __('pwa-for-filament::pwa.banner.firefox_instructions') }}
-                        </p>
-
-                        <div style="margin-top: 0.75rem;">
-                            <x-filament::button size="sm" color="gray" outlined data-pwa-dismiss>
-                                {{ __('pwa-for-filament::pwa.banner.dismiss') }}
-                            </x-filament::button>
-                        </div>
-                    </div>
                 </div>
 
                 <x-filament::icon-button

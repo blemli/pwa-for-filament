@@ -7,7 +7,6 @@ return [
         'description' => 'Installez cette application sur votre appareil pour un accès rapide.',
         'install' => 'Installer',
         'dismiss' => 'Plus tard',
-        'firefox_instructions' => 'Firefox ne permet pas l\'installation directe. Ouvrez le menu du navigateur et choisissez « Ajouter à l\'écran d\'accueil » (Android), ou utilisez un navigateur basé sur Chromium.',
     ],
 
     'offline' => [
