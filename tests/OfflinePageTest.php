@@ -35,3 +35,11 @@ it('themes the offline page from the panel', function () {
         ->assertSee('.dark {', false)
         ->assertSee('theme-color', false);
 });
+
+it('reads the theme choice from Filament\'s storage key, old and new', function () {
+    bootPanel();
+
+    // Filament renamed `theme` to `filament:theme:mode` in v4.15.3 / v5.11.0.
+    $this->get('/admin/pwa/offline')
+        ->assertSee("localStorage.getItem('filament:theme:mode') ?? localStorage.getItem('theme')", false);
+});

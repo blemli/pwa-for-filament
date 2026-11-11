@@ -60,3 +60,14 @@ it('never shows a banner on firefox — there is nothing to install there', func
     expect($js)->not->toContain("show('firefox'")
         ->and($js)->not->toContain('isFirefox');
 });
+
+it('forces the screenshot theme under both of Filament\'s storage keys', function () {
+    config()->set('app.debug', true);
+
+    bootPanel();
+
+    // Filament renamed `theme` to `filament:theme:mode` in v4.15.3 / v5.11.0.
+    expect((string) FilamentView::renderHook(PanelsRenderHook::HEAD_START))
+        ->toContain("localStorage.setItem('filament:theme:mode', theme)")
+        ->toContain("localStorage.setItem('theme', theme)");
+});

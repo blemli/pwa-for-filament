@@ -2,9 +2,10 @@
 
 All notable changes to `pwa-for-filament` will be documented in this file.
 
-## Unreleased
+## v0.1.3 - 2026-11-11
 
 - The install banner no longer shows on Firefox: desktop Firefox cannot install PWAs, so the "switch browser" instructions nagged every session. Browsers without `beforeinstallprompt` now get no banner at all (`firefox_instructions` translations removed)
+- Follow Filament's renamed theme storage key: since Filament v4.15.3 / v5.11.0 the in-app theme choice lives in `localStorage['filament:theme:mode']` instead of `localStorage.theme`. The offline page now reads the new key (falling back to the old one on older Filament versions), and the `pwa:install` dark-mode screenshot forcer writes both — previously the offline page ignored the user's theme choice and dark screenshots came out light on current Filament
 
 ## v0.1.2 - 2026-09-02
 

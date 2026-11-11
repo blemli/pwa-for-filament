@@ -37,9 +37,11 @@
         @endif
         @if ($hasDarkMode && ! $darkModeForced)
             {{-- Same theme resolution as Filament's own bootstrap: the user's
-                 in-app choice from localStorage, falling back to the OS. --}}
+                 in-app choice from localStorage, falling back to the OS.
+                 Filament stores it under `filament:theme:mode` since v4.15.3 /
+                 v5.11.0; older versions used `theme`. --}}
             <script>
-                const theme = localStorage.getItem('theme');
+                const theme = localStorage.getItem('filament:theme:mode') ?? localStorage.getItem('theme');
 
                 if (theme === 'dark' || (theme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                     document.documentElement.classList.add('dark');
